@@ -445,4 +445,4 @@ def db_get_game_completed_game_sentences_from_game_code(game_code):
 
 
 def generate_game_code():
-    return ''.join((random.choices(digits, k=6)))
+    return ''.join([random.choice(digits) for _ in range(6)])
