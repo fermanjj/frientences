@@ -188,20 +188,5 @@ def clear():
     return redirect(url_for('home'))
 
 
-@app.route('/test/set_kvp/<string:key>/<string:value>')
-def test_set_kvp(key, value):
-    session[key] = value
-    return redirect(url_for('test_session_info'))
-
-
-@app.route('/test/session_info')
-def test_session_info():
-    output_str = ''
-    for k, v in session.items():
-        output_str += '{}: {}<br>'.format(k, v)
-
-    return output_str
-
-
 if __name__ == '__main__':
     app.run(debug=DEBUG)
