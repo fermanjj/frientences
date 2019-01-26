@@ -401,7 +401,7 @@ def db_get_game_words(game_id):
     return words
 
 
-def db_get_game_completed_game_sentences(game_id):
+def db_get_completed_game_sentences(game_id):
     conn, cursor = get_conn_cursor()
 
     cursor.execute(
@@ -425,7 +425,7 @@ def db_get_game_completed_game_sentences(game_id):
     return word_info
 
 
-def db_get_game_completed_game_sentences_from_game_code(game_code):
+def db_get_completed_game_sentences_from_code(game_code):
     conn, cursor = get_conn_cursor()
 
     cursor.execute(
@@ -441,7 +441,7 @@ def db_get_game_completed_game_sentences_from_game_code(game_code):
 
     conn.close()
 
-    return db_get_game_completed_game_sentences(game_id)
+    return db_get_completed_game_sentences(game_id)
 
 
 def generate_game_code():

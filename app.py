@@ -7,8 +7,8 @@ from game_db_helper import (
     db_create_user, db_create_game, db_update_game_creator,
     db_get_game_users, db_start_game, db_get_game_info,
     db_add_game_word, db_get_game_words, db_get_game_info_from_code,
-    db_get_game_completed_game_sentences,
-    db_get_game_completed_game_sentences_from_game_code
+    db_get_completed_game_sentences,
+    db_get_completed_game_sentences_from_code
 )
 from helper_funcs import is_valid_word
 
@@ -107,7 +107,7 @@ def game_on():
 def game_end():
     user_id = session.get('user_id', None)
     game_id = session.get('game_id', None)
-    word_info = db_get_game_completed_game_sentences(game_id)
+    word_info = db_get_completed_game_sentences(game_id)
     game_info_ = db_get_game_info(user_id, game_id)
     return render_template(
         'game/end.html',
@@ -119,7 +119,7 @@ def game_end():
 
 @app.route('/game/end/<string:code>')
 def game_end_w_code(code):
-    word_info = db_get_game_completed_game_sentences_from_game_code(code)
+    word_info = db_get_completed_game_sentences_from_code(code)
     game_info_ = db_get_game_info_from_code(code)
     return render_template(
         'game/end.html',
