@@ -8,7 +8,8 @@
         <div class="row">
             <div class="col-md-6 col-sm-12 mx-auto">
                 <label for="game_code">Game Code:</label>
-                <input class="form-control form-control-lg" name="game_code" placeholder="Game Code" required value="{% if code is defined %}{{ code }}{% endif %}">
+                <input class="form-control form-control-lg" name="game_code" placeholder="Game Code" required
+                       value="{% if code is defined %}{{ code }}{% endif %}">
             </div>
         </div>
         <div class="row">
@@ -18,17 +19,35 @@
             </div>
         </div>
 
-        <div class="row" id="warning-text" {% if is_started is defined and is_started %}{% else %}style="display: none;"{% endif %}>
+        <div class="row" id="warning-text"
+             {% if is_started is defined and is_started %}{% else %}style="display: none;"{% endif %}>
             <div class="col-md-6 col-sm-12 mx-auto">
-                <p class="text-center text-lg text-danger">This game has already started and you will not be able to join this game. <a href="{{ url_for('create_game') }}">Click here</a> to create a new game!</p>
+                <p class="text-center text-lg text-danger">This game has already started and you will not be able to
+                    join this game. <a href="{{ url_for('create_game') }}">Click here</a> to create a new game!</p>
             </div>
         </div>
 
-
+        <div class="modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4>How to Play</h4>
+                    </div>
+                    <div class="modal-body">
+                        {% include 'how_to.html' %}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Dismiss</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="row">
             <div class="col-md-6 col-sm-12 mx-auto">
-                <button class="btn btn-lg btn-block custom-btn" type="submit" {% if is_started is defined and is_started %}disabled{% endif %}>Join</button>
+                <button class="btn btn-lg btn-block custom-btn" type="submit"
+                        {% if is_started is defined and is_started %}disabled{% endif %}>Join
+                </button>
             </div>
         </div>
     </form>
@@ -63,5 +82,7 @@
         }
 
         form.onsubmit = form_submit;
+
+        $('.modal').modal('show');
     </script>
 {% endblock %}

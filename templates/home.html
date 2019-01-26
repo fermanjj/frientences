@@ -8,6 +8,11 @@
         padding: 100px;
         text-align: center;
         cursor: pointer;
+        margin-bottom: 15px;
+        border: solid black 1px;
+        -webkit-border-radius: 15px;
+        -moz-border-radius: 15px;
+        border-radius: 15px;
     }
     .large-click-btn:hover {
         background-color: rgba(230, 230, 230, 0.71);
@@ -15,18 +20,28 @@
     .large-click-btn:active {
         background-color: rgba(215, 215, 215, 0.71);
     }
+    .row{
+        margin-top: 45px;
+    }
 </style>
 {% endblock %}
 
 {% block content %}
 
     <div class="row">
+        <div class="col-md-12">
+            <h2 class="text-center">How to Play</h2>
+        </div>
+        <div class="col-md-12">
+            {% include 'how_to.html' %}
+        </div>
+    </div>
+
+    <div class="row">
         <div id="create-game-div" class="col-md-12 large-click-btn">
             <h2>Create</h2>
         </div>
-        <div class="col-md-12">
-            <hr>
-        </div>
+
         <div id="join-game-div" class="col-md-12 large-click-btn">
             <h2>Join</h2>
         </div>
