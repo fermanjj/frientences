@@ -8,7 +8,7 @@
         <div class="col-12">
             <div class="col-md-6 col-sm-12 mx-auto">
                 <h4>{{ game_name }}</h4>
-                <p>
+                <p style="margin-top: 50px; margin-bottom: 50px;">
                     {% for info in word_info %}
                         {{ info['word'] }}
                     {% endfor %}
@@ -17,7 +17,10 @@
         </div>
 
         <div class="col-12 text-center">
-            <button class="btn btn-lg custom-btn" id="clip-btn" style="background-color: #FFF; color: #000;" data-clipboard-text="{{ url_for('game_end_w_code', code=game_code, _external=True) }}">Share With Friends!</button>
+            <button class="btn btn-lg custom-btn" id="clip-btn" style="background-color: #FFF; color: #000;"
+                    data-clipboard-text="{{ url_for('game_end_w_code', code=game_code, _external=True) }}">Share With
+                Friends!
+            </button>
             <a class="btn btn-lg custom-btn" href="{{ url_for('home') }}">Create a New Game</a>
         </div>
     </div>
@@ -27,27 +30,33 @@
     <div class="row">
         <div class="col-md-6 col-sm-12 mx-auto">
             <h4 class="text-center">Breakdown</h4>
-            {% for info in word_info %}
-                <p class="text-center">{{ info['word'] }} <span style="margin-left: 35px; margin-right: 35px;">-</span> <b>{{ info['user_name'] }}</b></p>
-            {% endfor %}
+            <table class="table">
+                {% for info in word_info %}
+                    <tr>
+                        <td>{{ info['word'] }}</td>
+                        <td class="text-right"><b>{{ info['user_name'] }}</b></td>
+                    </tr>
+                {% endfor %}
+            </table>
         </div>
     </div>
 
 {% endblock %}
 
 {% block code_below_footer %}
-<script>
-    function instantiateClipboard() {
-        let clipboard = new ClipboardJS('#clip-btn');
-        
-        clipboard.on('success', function (e) {
-            $(e.trigger).tooltip({title: "Copied!"});
-            $(e.trigger).tooltip('show');
-            setTimeout(function () {
-                $(e.trigger).tooltip('dispose');
-            }, 500)
-        })
-    }
-    window.onload = instantiateClipboard;
-</script>
+    <script>
+        function instantiateClipboard() {
+            let clipboard = new ClipboardJS('#clip-btn');
+
+            clipboard.on('success', function (e) {
+                $(e.trigger).tooltip({title: "Copied!"});
+                $(e.trigger).tooltip('show');
+                setTimeout(function () {
+                    $(e.trigger).tooltip('dispose');
+                }, 500)
+            })
+        }
+
+        window.onload = instantiateClipboard;
+    </script>
 {% endblock %}

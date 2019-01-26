@@ -64,7 +64,7 @@
                 <div class="row">
                     <div class="col-md-6 col-sm-12 mx-auto">
                         <label for="game_name">Next Word:</label>
-                        <input class="form-control form-control-lg" name="next_word" placeholder="Gibberish" required>
+                        <input class="form-control form-control-lg" name="next_word" placeholder="Gibberish" required autofocus>
                     </div>
                 </div>
                 <div class="row">
@@ -82,7 +82,6 @@
     <script>
 
         function setMessage(message) {
-            console.log('message');
             $('.message-text').html(message);
         }
 
@@ -113,17 +112,15 @@
                     setMessage("It's your turn! Choose the next word for the sentence. Words that end with a period will end the current sentence.");
                 },
                 error: function (e) {
-                    console.log(e);
+                    // TODO: handle error
                 }
             })
         }
 
         function intervalFunc() {
-            console.log('ran');
             $.ajax({
                 url: '{{ url_for('game_info') }}',
                 success: function (d) {
-                    console.log(d);
                     if (d.game_finished) {
                         window.location = '{{ url_for('game_end') }}';
                         return;
@@ -132,12 +129,12 @@
                         currentUserAction();
                     } else {
                         showHideForm('hide');
-                        setMessage("Waiting for " + d.current_user_name + " to choose their word...");
+                        setMessage("Waiting for <b>" + d.current_user_name + "</b> to choose their word...");
                         setTimeout(intervalFunc, 5000);
                     }
                 },
                 error: function (e) {
-                    console.log(e);
+                    // TODO: handle error
                 }
             });
         }
@@ -151,17 +148,16 @@
                 data: $('#next_word_form').serialize(),
                 method: 'post',
                 success: function (d) {
-                    console.log(d);
                     showHideForm('hide');
                     setMessage('Loading next user...');
                     $('input[name=next_word]').val('');
                     intervalFunc();
                 },
                 error: function (e) {
-                    console.log(e);
+                    // TODO: handle error
                 },
                 complete: function (c) {
-                    console.log(c);
+                    // TODO: update word list?
                 }
             })
         })
