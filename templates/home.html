@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Frientences - Create sentences with friends!{% endblock %}
+
+{% block code_below_navbar %}
+<style>
+    .large-click-btn {
+        padding: 100px;
+        text-align: center;
+        cursor: pointer;
+    }
+    .large-click-btn:hover {
+        background-color: rgba(230, 230, 230, 0.71);
+    }
+    .large-click-btn:active {
+        background-color: rgba(215, 215, 215, 0.71);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div id="create-game-div" class="col-md-12 large-click-btn">
+            <h2>Create</h2>
+        </div>
+        <div class="col-md-12">
+            <hr>
+        </div>
+        <div id="join-game-div" class="col-md-12 large-click-btn">
+            <h2>Join</h2>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block code_above_footer %}
+<script>
+    function create_game_click() {
+        window.location = '{{ url_for('create_game') }}';
+    }
+    function join_game_click() {
+        window.location = '{{ url_for('join_game') }}';
+    }
+    document.getElementById('create-game-div').onclick = create_game_click;
+    document.getElementById('join-game-div').onclick = join_game_click;
+</script>
+{% endblock %}

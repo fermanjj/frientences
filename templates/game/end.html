@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}Frientences - Game Over ({{ game_name }}){% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-12">
+            <div class="col-md-6 col-sm-12 mx-auto">
+                <h4>{{ game_name }}</h4>
+                <p>
+                    {% for info in word_info %}
+                        {{ info['word'] }}
+                    {% endfor %}
+                </p>
+            </div>
+        </div>
+
+        <div class="col-12 text-center">
+            <button class="btn btn-lg custom-btn" id="clip-btn" style="background-color: #FFF; color: #000;" data-clipboard-text="{{ url_for('game_end_w_code', code=game_code, _external=True) }}">Share With Friends!</button>
+            <a class="btn btn-lg custom-btn" href="{{ url_for('home') }}">Create a New Game</a>
+        </div>
+    </div>
+
+    <hr style="margin-top: 35px; margin-bottom: 35px;">
+
+    <div class="row">
+        <div class="col-md-6 col-sm-12 mx-auto">
+            <h4 class="text-center">Breakdown</h4>
+            {% for info in word_info %}
+                <p class="text-center">{{ info['word'] }} <span style="margin-left: 35px; margin-right: 35px;">-</span> <b>{{ info['user_name'] }}</b></p>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block code_below_footer %}
+<script>
+    function instantiateClipboard() {
+        let clipboard = new ClipboardJS('#clip-btn');
+        
+        clipboard.on('success', function (e) {
+            $(e.trigger).tooltip({title: "Copied!"});
+            $(e.trigger).tooltip('show');
+            setTimeout(function () {
+                $(e.trigger).tooltip('dispose');
+            }, 500)
+        })
+    }
+    window.onload = instantiateClipboard;
+</script>
+{% endblock %}

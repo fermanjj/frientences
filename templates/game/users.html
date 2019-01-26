@@ -1,0 +1,8 @@
+{% for user in users %}
+<div class="user-item">
+    <u>{{ user['name'] }}</u>
+    {% if user['is_creator'] %}
+        <span class="is_creator float-right">Game creator</span>
+    {% endif %}
+</div>
+{% endfor %}

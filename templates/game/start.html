@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+{% block title %}Frientences - Start Game{% endblock %}
+
+{% block code_below_navbar %}
+    <style>
+        .joined-users {
+            border-radius: 5px;
+            border: 3px solid lightgrey;
+        }
+
+        .user-item {
+            margin: 15px;
+        }
+
+        .is_creator {
+            font-weight: bold;
+        }
+
+        .row {
+            margin-top: 35px;
+            margin-bottom: 35px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-6 col-sm-12 mx-auto">
+            <h5>Players in the game</h5>
+            <div class="joined-users">
+
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 col-sm-12 mx-auto">
+            <h3 class="text-center">Game Code: {{ game_code }}
+            <button class="btn btn-lg custom-btn" id="clip-btn" style="background-color: #FFF; color: #000;" data-clipboard-text="{{ url_for('join_game_w_code', code=game_code, _external=True) }}">Share With Friends!</button>
+            </h3>
+        </div>
+    </div>
+
+     <div class="row">
+        <div class="col-md-12 text-center">
+            <h3>Waiting for the creator to start the game...</h3>
+        </div>
+    </div>
+
+    {% if is_creator %}
+
+        <div class="row">
+            <div class="col-md-6 col-sm-12 mx-auto">
+                <button id="start_btn" class="btn btn-lg btn-block custom-btn">Start</button>
+            </div>
+        </div>
+
+    {% endif %}
+
+{% endblock %}
+
+{% block code_above_footer %}
+    <script>
+
+
+
+        function updateUsers() {
+            $.ajax({
+                url: '{{ url_for('game_users') }}',
+                success: function (d) {
+                    $('.joined-users').html(d);
+                },
+                error: function (e) {
+                    console.log(e);
+                }
+            })
+        }
+
+        {% if is_creator %}
+
+            function startGame(e) {
+                e.preventDefault();
+                $.ajax({
+                    url: '{{ url_for('game_start') }}',
+                    method: 'post',
+                    success: function (d) {
+                        window.location = '{{ url_for('game_on') }}';
+                    },
+                    error: function (e) {
+                        console.log(e);
+                    }
+                });
+            }
+
+            $(document).on('click', '#start_btn', startGame);
+
+        {% endif %}
+
+        function intervalFunc() {
+            updateUsers();
+            $.ajax({
+                url: '{{ url_for('game_info') }}',
+                success: function (d) {
+                    console.log(d);
+                    if (d.game_finished) {
+                        window.location = '{{ url_for('game_end') }}';
+                        return;
+                    }
+                    if (d.game_started) {
+                        window.location = '{{ url_for('game_on') }}';
+                    } else {
+                        setTimeout(intervalFunc, 5000);
+                    }
+                },
+                error: function (e) {
+                    console.log(e);
+                }
+            })
+        }
+
+        function instantiateClipboard() {
+            let clipboard = new ClipboardJS('#clip-btn');
+
+            clipboard.on('success', function (e) {
+                $(e.trigger).tooltip({title: "Copied!"});
+                $(e.trigger).tooltip('show');
+                setTimeout(function () {
+                    $(e.trigger).tooltip('dispose');
+                }, 500)
+            })
+        }
+
+        intervalFunc();
+        window.onload = instantiateClipboard;
+</script>
+{% endblock %}

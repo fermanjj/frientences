@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+{% block html %}
+    <html lang="en">
+    {% block head %}
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+            <noscript><h1 style="color: red">JavaScript Must be Enabled!!!</h1></noscript>
+            <title>{% block title %}{% endblock %}</title>
+            {% include 'head_include_scripts.html' %}
+            {% include 'head_css.html' %}
+            {% block head_code %}{% endblock %}
+        </head>
+    {% endblock %}
+    {% block body %}
+        <body>
+        {% block code_above_navbar %}{% endblock %}
+        {% include 'navbar.html' %}
+        {% block code_below_navbar %}{% endblock %}
+        {% include 'sidebar.html' %}
+        <div id="main" class="container">
+
+            {% block content %}{% endblock %}
+
+            {% include 'footer_js.html' %}
+
+            {% block code_above_footer %}{% endblock %}
+            {% include 'footer.html' %}
+            {% block code_below_footer %}{% endblock %}
+
+        </div>
+        </body>
+    {% endblock %}
+    </html>
+{% endblock %}

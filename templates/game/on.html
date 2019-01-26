@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+
+{% block title %}Frientences - Game On!{% endblock %}
+
+{% block code_below_navbar %}
+    <style>
+        .word-bar {
+            white-space: nowrap;
+            overflow-x: scroll;
+            border-top: 2px solid darkgrey;
+            border-bottom: 2px solid darkgrey;
+            margin-left: 15px;
+            margin-right: 15px;
+        }
+
+        .word {
+            min-height: 25px;
+            min-width: 80px;
+            border: 1px solid black;
+            margin: 15px;
+            display: inline-block;
+            border-radius: 3px;
+            text-align: center;
+            padding: 15px;
+        }
+
+        .hidden-word {
+            opacity: 0.6;
+        }
+
+        .shown-word {
+
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12 word-bar">
+            <div class="word hidden-word">hidden</div>
+            <div class="word hidden-word">hidden</div>
+            <div class="word hidden-word">hidden</div>
+            <div class="word hidden-word">hidden</div>
+            <div class="word hidden-word">hidden</div>
+            <div class="word hidden-word">hidden</div>
+            <div class="word hidden-word">hidden</div>
+            <div class="word hidden-word">hidden</div>
+            <div class="word hidden-word">hidden</div>
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <span class="message-text">
+                Starting game...
+            </span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <form id="next_word_form" style="display: none;">
+                <div class="row">
+                    <div class="col-md-6 col-sm-12 mx-auto">
+                        <label for="game_name">Next Word:</label>
+                        <input class="form-control form-control-lg" name="next_word" placeholder="Gibberish" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 col-sm-12 mx-auto">
+                        <button id="add_word_btn" class="btn btn-lg btn-block custom-btn" type="submit">Add Word</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block code_above_footer %}
+    <script>
+
+        function setMessage(message) {
+            console.log('message');
+            $('.message-text').html(message);
+        }
+
+        function showHideForm(show_hide) {
+            if (show_hide === 'show') {
+                $('#next_word_form').show();
+            } else {
+                $('#next_word_form').hide();
+            }
+        }
+
+        function updateWordList(words) {
+            console.log(words);
+            let word_bar = $('.word-bar');
+            $('.shown-word').remove();
+            $.each(words, function (i, v) {
+                word_bar.append('<div class="word shown-word">' + v + '</div>');
+            });
+            word_bar.scrollLeft(500);
+        }
+
+        function currentUserAction() {
+            $.ajax({
+                url: '{{ url_for('game_word_list') }}',
+                success: function (d) {
+                    updateWordList(d.words);
+                    showHideForm('show');
+                    setMessage("It's your turn! Choose the next word for the sentence. Words that end with a period will end the current sentence.");
+                },
+                error: function (e) {
+                    console.log(e);
+                }
+            })
+        }
+
+        function intervalFunc() {
+            console.log('ran');
+            $.ajax({
+                url: '{{ url_for('game_info') }}',
+                success: function (d) {
+                    console.log(d);
+                    if (d.game_finished) {
+                        window.location = '{{ url_for('game_end') }}';
+                        return;
+                    }
+                    if (d.is_current_user) {
+                        currentUserAction();
+                    } else {
+                        showHideForm('hide');
+                        setMessage("Waiting for " + d.current_user_name + " to choose their word...");
+                        setTimeout(intervalFunc, 5000);
+                    }
+                },
+                error: function (e) {
+                    console.log(e);
+                }
+            });
+        }
+
+        intervalFunc();
+
+        $(document).on('click', '#add_word_btn', function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: '{{ url_for('game_add_word') }}',
+                data: $('#next_word_form').serialize(),
+                method: 'post',
+                success: function (d) {
+                    console.log(d);
+                    showHideForm('hide');
+                    setMessage('Loading next user...');
+                    $('input[name=next_word]').val('');
+                    intervalFunc();
+                },
+                error: function (e) {
+                    console.log(e);
+                },
+                complete: function (c) {
+                    console.log(c);
+                }
+            })
+        })
+    </script>
+{% endblock %}

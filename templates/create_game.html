@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block title %}Frientences - Create Game{% endblock %}
+
+{% block content %}
+    <form>
+        <div class="row">
+            <div class="col-md-6 col-sm-12 mx-auto">
+                <label for="game_name">Game Name:</label>
+                <input class="form-control form-control-lg" name="game_name" placeholder="Game Name" required>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-sm-12 mx-auto">
+                <label for="creator_user_name">Display Name:</label>
+                <input class="form-control form-control-lg" name="creator_user_name" placeholder="Display Name" required>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-sm-12 mx-auto">
+                <label for="number_of_sentences">Choose the number of sentences for this game:</label>
+                <select class="form-control form-control-lg" name="number_of_sentences" required>
+                    {% for i in range(1, 4) %}
+                        <option value="{{ i }}">{{ i }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-sm-12 mx-auto">
+                <label for="words_shown">Choose the number of words that are shown during the game:</label>
+                <select class="form-control form-control-lg" name="words_shown" required>
+                    {% for i in range(1, 4) %}
+                        <option value="{{ i }}"
+                        {% if loop.last %}
+                            selected
+                        {% endif %}
+                        >{{ i }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-sm-12 mx-auto">
+                <button class="btn btn-lg btn-block custom-btn" type="submit">Create</button>
+            </div>
+        </div>
+    </form>
+{% endblock %}
+
+{% block code_above_footer %}
+    <script>
+        let form = document.querySelector('form');
+
+        function form_submit(e) {
+            e.preventDefault();
+            // TODO: start loading spinner
+            $.ajax({
+                url: '{{ url_for('create_game') }}',
+                method: 'post',
+                data: $(form).serialize(),
+                success: function (d) {
+                    if (d.status === 'success') {
+                        window.location = '{{ url_for('game_start') }}';
+                    } else {
+                        // TODO: show error message
+                    }
+                },
+                error: function (e) {
+                    // TODO: show error message
+                },
+                complete: function () {
+                    // TODO: stop loading spinner
+                }
+            })
+        }
+
+        form.onsubmit = form_submit;
+    </script>
+{% endblock %}
