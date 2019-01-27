@@ -5,6 +5,7 @@
 {% block code_below_navbar %}
     <style>
         .word-bar {
+            min-height: 90px;
             white-space: nowrap;
             overflow-x: scroll;
             border-top: 2px solid darkgrey;
@@ -31,21 +32,23 @@
         .shown-word {
 
         }
+        .row {
+            margin-top: 35px;
+            margin-bottom: 35px;
+        }
     </style>
 {% endblock %}
 
 {% block content %}
+
+    <div class="row">
+        <div class="col-md-12">
+            <h4 class="text-center">{{ game_name }}</h4>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-md-12 word-bar">
-            <div class="word hidden-word">hidden</div>
-            <div class="word hidden-word">hidden</div>
-            <div class="word hidden-word">hidden</div>
-            <div class="word hidden-word">hidden</div>
-            <div class="word hidden-word">hidden</div>
-            <div class="word hidden-word">hidden</div>
-            <div class="word hidden-word">hidden</div>
-            <div class="word hidden-word">hidden</div>
-            <div class="word hidden-word">hidden</div>
 
         </div>
     </div>
@@ -55,6 +58,7 @@
             <span class="message-text">
                 Starting game...
             </span>
+            <i class="fas fa-spinner fa-sm fa-spin" id="spinner" style="display: none;"></i>
         </div>
     </div>
 
@@ -93,28 +97,32 @@
             }
         }
 
-        function updateWordList(words) {
-            console.log(words);
-            let word_bar = $('.word-bar');
-            $('.shown-word').remove();
-            $.each(words, function (i, v) {
-                word_bar.append('<div class="word shown-word">' + v + '</div>');
-            });
-            word_bar.scrollLeft(500);
-        }
-
-        function currentUserAction() {
+        function updateWordList() {
+            $('#spinner').show();
             $.ajax({
                 url: '{{ url_for('game_word_list') }}',
                 success: function (d) {
-                    updateWordList(d.words);
-                    showHideForm('show');
-                    setMessage("It's your turn! Choose the next word for the sentence. Words that end with a period will end the current sentence.");
+                    let words = d.words;
+                    console.log(words);
+                    let word_bar = $('.word-bar');
+                    $('.shown-word').remove();
+                    $.each(words, function (i, v) {
+                        word_bar.append('<div class="word shown-word">' + v + '</div>');
+                    });
                 },
                 error: function (e) {
                     // TODO: handle error
+                },
+                complete: function (c) {
+                    $('#spinner').hide();
                 }
-            })
+            });
+        }
+
+        function currentUserAction() {
+            updateWordList();
+            showHideForm('show');
+            setMessage("It's your turn! Choose the next word for the sentence. Words that end with a period will end the current sentence.");
         }
 
         function intervalFunc() {
@@ -140,6 +148,8 @@
         }
 
         intervalFunc();
+
+        setInterval(updateWordList, 3000);
 
         $(document).on('click', '#add_word_btn', function (e) {
             e.preventDefault();
