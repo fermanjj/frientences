@@ -100,7 +100,10 @@ def game_start():
 
 @app.route('/game/on')
 def game_on():
-    return render_template('game/on.html')
+    user_id = session.get('user_id', None)
+    game_id = session.get('game_id', None)
+    game_info_ = db_get_game_info(user_id, game_id)
+    return render_template('game/on.html', game_name=game_info_['game_name'])
 
 
 @app.route('/game/end')
