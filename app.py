@@ -33,6 +33,12 @@ def create_game():
         number_of_sentences = request.form.get('number_of_sentences', 1)
         words_shown = request.form.get('words_shown', 3)
 
+        if 0 < number_of_sentences < 4:
+            number_of_sentences = 3
+
+        if 0 < words_shown < 4:
+            words_shown = 3
+
         new_game_id = db_create_game(game_name, number_of_sentences, words_shown)
         session['game_id'] = new_game_id
 
@@ -83,19 +89,20 @@ def join_game_w_code(code):
 
 @app.route('/game/start', methods=['GET', 'POST'])
 def game_start():
+    game_id = session.get('game_id', None)
+    user_id = session.get('user_id', None)
+
+    game_info_ = db_get_game_info(user_id, game_id)
+    is_creator = game_info_['is_creator']
+    game_code = game_info_['game_code']
     if request.method == 'GET':
-        game_id = session.get('game_id', None)
-        user_id = session.get('user_id', None)
-
-        game_info_ = db_get_game_info(user_id, game_id)
-        is_creator = game_info_['is_creator']
-        game_code = game_info_['game_code']
-
         return render_template(
             'game/start.html', is_creator=is_creator, game_code=game_code)
     else:
-        db_start_game(session.get('game_id', None))
-        return jsonify({'status': 'success'})
+        if is_creator:
+            db_start_game(game_id)
+            return jsonify({'status': 'success'})
+        return jsonify({'status': 'failure'})
 
 
 @app.route('/game/on')
