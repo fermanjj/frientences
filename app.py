@@ -135,14 +135,8 @@ def game_end_w_code(code):
 @app.route('/game/word_list')
 def game_word_list():
     game_id = session.get('game_id', None)
-    user_id = session.get('user_id', None)
 
-    game_info_ = db_get_game_info(user_id, game_id)
-
-    if game_info_['is_current_user']:
-        return jsonify({'status': 'success', 'words': db_get_game_words(game_id)})
-
-    return jsonify({'status': 'failure'})
+    return jsonify({'status': 'success', 'words': db_get_game_words(game_id)})
 
 
 @app.route('/game/add_word', methods=['POST'])
@@ -150,6 +144,11 @@ def game_add_word():
     game_id = session.get('game_id', None)
     user_id = session.get('user_id', None)
     new_word = request.form.get('next_word', None)
+
+    if new_word is not None:
+        new_word = new_word.strip()
+    else:
+        return jsonify({'status': 'failure'})
 
     if not is_valid_word(new_word):
         return jsonify({'status': 'failure'})
