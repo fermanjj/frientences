@@ -7,6 +7,8 @@
             <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
             <noscript><h1 style="color: red">JavaScript Must be Enabled!!!</h1></noscript>
             <title>{% block title %}{% endblock %}</title>
+            <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+            <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
             {% include 'head_include_scripts.html' %}
             {% include 'head_css.html' %}
             {% block head_code %}{% endblock %}
@@ -14,12 +16,11 @@
     {% endblock %}
     {% block body %}
         <body>
-        {% block code_above_navbar %}{% endblock %}
-        {% include 'navbar.html' %}
-        {% block code_below_navbar %}{% endblock %}
-        {% include 'sidebar.html' %}
         <div id="main" class="container">
-
+            {% block code_above_navbar %}{% endblock %}
+            {% include 'navbar.html' %}
+            {% block code_below_navbar %}{% endblock %}
+            {% include 'sidebar.html' %}
             {% block content %}{% endblock %}
 
             {% include 'footer_js.html' %}
