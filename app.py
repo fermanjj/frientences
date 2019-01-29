@@ -34,7 +34,7 @@ def create_game():
         words_shown = int(request.form.get('words_shown', 3))
 
         if number_of_sentences < 1 or number_of_sentences > 3:
-            number_of_sentences = 3
+            number_of_sentences = 1
 
         if words_shown < 1 or words_shown > 3:
             words_shown = 3
