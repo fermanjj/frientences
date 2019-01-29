@@ -30,8 +30,8 @@ def create_game():
 
         user_name = request.form.get('creator_user_name', 'No Name')
         game_name = request.form.get('game_name', 'No Name')
-        number_of_sentences = request.form.get('number_of_sentences', 1)
-        words_shown = request.form.get('words_shown', 3)
+        number_of_sentences = int(request.form.get('number_of_sentences', 1))
+        words_shown = int(request.form.get('words_shown', 3))
 
         if 0 < number_of_sentences < 4:
             number_of_sentences = 3
