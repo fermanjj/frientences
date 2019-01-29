@@ -33,10 +33,10 @@ def create_game():
         number_of_sentences = int(request.form.get('number_of_sentences', 1))
         words_shown = int(request.form.get('words_shown', 3))
 
-        if 0 < number_of_sentences < 4:
+        if number_of_sentences < 1 or number_of_sentences > 3:
             number_of_sentences = 3
 
-        if 0 < words_shown < 4:
+        if words_shown < 1 or words_shown > 3:
             words_shown = 3
 
         new_game_id = db_create_game(game_name, number_of_sentences, words_shown)
