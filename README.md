@@ -1,3 +1,3 @@
 Frientences Readme
 
-[http://frientences.com]
+http://frientences.com
