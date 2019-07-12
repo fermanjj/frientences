@@ -1,0 +1,38 @@
+version: "3.7"
+services:
+
+  app:
+    container_name: frientences_app
+    ports:
+      - "5000:5000"
+    build:
+      context: ./
+      dockerfile: Dockerfile_app
+    volumes:
+      - "./:/usr/src/app:ro"
+    networks:
+      local_net:
+        ipv4_address: 172.24.1.1
+    environment:
+      DEBUG: 1
+      MYSQL_HOSTNAME: 172.24.1.2
+
+  db:
+    container_name: frientences_db
+    build:
+      context: ./
+      dockerfile: Dockerfile_db
+    ports:
+      - "3306:3306"
+    networks:
+      local_net:
+        ipv4_address: 172.24.1.2
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+
+networks:
+  local_net:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.24.0.0/16

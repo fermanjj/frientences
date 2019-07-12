@@ -1,0 +1,9 @@
+FROM python:3.5.7-alpine3.10
+
+WORKDIR /usr/src/app
+
+COPY ./requirements.txt ./
+
+RUN pip install --no-cache-dir --quiet -r requirements.txt
+
+CMD [ "python", "app.py" ]
